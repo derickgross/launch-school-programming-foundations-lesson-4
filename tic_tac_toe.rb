@@ -27,7 +27,16 @@ end
 
 # rubocop:disable Metrics/AbcSize
 def winner?(board_values)
-  winning_combinations = { "123" => [board_values[:one], board_values[:two], board_values[:three]], "456" => [board_values[:four], board_values[:five], board_values[:six]], "789" => [board_values[:seven], board_values[:eight], board_values[:nine]], "147" => [board_values[:one], board_values[:four], board_values[:seven]], "258" => [board_values[:two], board_values[:five], board_values[:eight]], "369" => [board_values[:three], board_values[:six], board_values[:nine]], "159" => [board_values[:one], board_values[:five], board_values[:nine]], "357" => [board_values[:three], board_values[:five], board_values[:seven]] }
+  winning_combinations = {
+    "123" => [board_values[:one], board_values[:two], board_values[:three]],
+    "456" => [board_values[:four], board_values[:five], board_values[:six]],
+    "789" => [board_values[:seven], board_values[:eight], board_values[:nine]],
+    "147" => [board_values[:one], board_values[:four], board_values[:seven]],
+    "258" => [board_values[:two], board_values[:five], board_values[:eight]],
+    "369" => [board_values[:three], board_values[:six], board_values[:nine]],
+    "159" => [board_values[:one], board_values[:five], board_values[:nine]],
+    "357" => [board_values[:three], board_values[:five], board_values[:seven]]
+  }
 
   result = nil
 
