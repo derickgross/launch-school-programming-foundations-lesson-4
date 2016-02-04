@@ -25,6 +25,7 @@ def prompt(message)
   puts "-> #{message}"
 end
 
+# rubocop:disable Metrics/AbcSize
 def winner?(board_values)
   winning_combinations = { "123" => [board_values[:one], board_values[:two], board_values[:three]], "456" => [board_values[:four], board_values[:five], board_values[:six]], "789" => [board_values[:seven], board_values[:eight], board_values[:nine]], "147" => [board_values[:one], board_values[:four], board_values[:seven]], "258" => [board_values[:two], board_values[:five], board_values[:eight]], "369" => [board_values[:three], board_values[:six], board_values[:nine]], "159" => [board_values[:one], board_values[:five], board_values[:nine]], "357" => [board_values[:three], board_values[:five], board_values[:seven]] }
 
@@ -43,11 +44,13 @@ def winner?(board_values)
   end
   result
 end
+# rubocop:enable Metrics/AbcSize
 
 def empty_square?(board_values, square)
   board_values[square] == " "
 end
 
+# rubocop:disable Metrics/MethodLength
 def choice_translator(choice)
   square = ""
 
@@ -73,6 +76,7 @@ def choice_translator(choice)
   end
   square
 end
+# rubocop:enable Metrics/MethodLength
 
 def player_chooses_square(board_values)
   choice = ""
