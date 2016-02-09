@@ -5,7 +5,7 @@ current_player_is_player = true
 player_wins = 0
 computer_wins = 0
 
-board_values = {1 => " ", 2 => " ", 3 => " ", 4 => " ", 5 => " ", 6 => " ", 7 => " ", 8 => " ", 9 => " "}
+board_values = { 1 => " ", 2 => " ", 3 => " ", 4 => " ", 5 => " ", 6 => " ", 7 => " ", 8 => " ", 9 => " " }
 
 board_references = *(0..9)
 
@@ -102,7 +102,6 @@ def computer_chooses_square(board_values)
   x_block = nil
 
   winning_combinations.each do |combo|
-
     combo_values = [board_values[combo[0]], board_values[combo[1]], board_values[combo[2]]]
     if (combo_values.count("O") == 2) && (combo_values.count(" ") == 1)
       o_win = combo[combo_values.index(" ")]
@@ -112,7 +111,7 @@ def computer_chooses_square(board_values)
       if board_values[5] == " "
         square = 5
       else
-        square = board_values.select {|_key, value| value == " "}.keys.sample
+        square = board_values.select { |_key, value| value == " " }.keys.sample
       end
     end
 
@@ -162,7 +161,7 @@ loop do
 
     current_player_is_player = answer.downcase.start_with?('y')
 
-    board_values = {1 => " ", 2 => " ", 3 => " ", 4 => " ", 5 => " ", 6 => " ", 7 => " ", 8 => " ", 9 => " "}
+    board_values = { 1 => " ", 2 => " ", 3 => " ", 4 => " ", 5 => " ", 6 => " ", 7 => " ", 8 => " ", 9 => " " }
 
     display_board(board_values)
 
