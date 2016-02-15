@@ -1,5 +1,16 @@
 require "pry"
 
+WINNING_COMBINATIONS = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
+  [1, 4, 7],
+  [2, 5, 8],
+  [3, 6, 9],
+  [1, 5, 9],
+  [3, 5, 7]
+]
+
 current_player_is_player = true
 
 player_wins = 0
@@ -8,21 +19,6 @@ computer_wins = 0
 board_values = { 1 => " ", 2 => " ", 3 => " ", 4 => " ", 5 => " ", 6 => " ", 7 => " ", 8 => " ", 9 => " " }
 
 board_references = *(0..9)
-
-# rubocop:disable Metrics/AbcSize
-def winning_combinations(board_values)
-  [
-    [board_values[1], board_values[2], board_values[3]],
-    [board_values[4], board_values[5], board_values[6]],
-    [board_values[7], board_values[8], board_values[9]],
-    [board_values[1], board_values[4], board_values[7]],
-    [board_values[2], board_values[5], board_values[8]],
-    [board_values[3], board_values[6], board_values[9]],
-    [board_values[1], board_values[5], board_values[9]],
-    [board_values[3], board_values[5], board_values[7]]
-  ]
-end
-# rubocop:enable Metrics/AbcSize
 
 def add_player_choice_to_board_values(board_values, choice)
   board_values[choice] = "X"
@@ -47,14 +43,16 @@ def prompt(message)
   puts "-> #{message}"
 end
 
-def winner(winning_combinations)
+def winner(board_values)
   result = nil
 
-  winning_combinations.each do |combo|
-    if combo.uniq == ["X"]
+  WINNING_COMBINATIONS.each do |combo|
+    values = [board_values[combo[0]], board_values[combo[1]], board_values[combo[2]]]
+
+    if values.uniq == ["X"]
       result = "Player"
       break
-    elsif combo.uniq == ["O"]
+    elsif values.uniq == ["O"]
       result = "Computer"
       break
     else
@@ -87,47 +85,48 @@ def player_chooses_square(board_values)
   add_player_choice_to_board_values(board_values, choice)
 end
 
-def computer_choice_logic(board_values, winning_combinations, o_win, x_block)
-  square = ""
-  winning_combinations.each do |combo|
+def at_risk_square_calculator(board_values, token)
+  at_risk_square = nil
+  WINNING_COMBINATIONS.each do |combo|
     combo_values = [board_values[combo[0]], board_values[combo[1]], board_values[combo[2]]]
-    if (combo_values.count("O") == 2) && (combo_values.count(" ") == 1)
-      o_win = combo[combo_values.index(" ")]
-    elsif (combo_values.count("X") == 2) && (combo_values.count(" ") == 1)
-      x_block = combo[combo_values.index(" ")]
-    else
-      if board_values[5] == " "
-        square = 5
-      else
-        square = board_values.select { |_key, value| value == " " }.keys.sample
-      end
-    end
-
-    if o_win
-      square = o_win
-    elsif x_block
-      square = x_block
+    if (combo_values.count(token) == 2) && (combo_values.count(" ") == 1)
+      at_risk_square = combo[combo_values.index(" ")]
     end
   end
+  at_risk_square
+end
+
+def offensive_choice(board_values)
+  token = "O"
+  at_risk_square_calculator(board_values, token)
+end
+
+def defensive_choice(board_values)
+  token = "X"
+  at_risk_square_calculator(board_values, token)
+end
+
+def choose_center_square(board_values)
+  if board_values[5] == " "
+    5
+  end
+end
+
+def choose_random_square(board_values)
+  test = board_values.select { |_key, value| value == " " }.keys.sample
+  test
+end
+
+def computer_choice_logic(board_values)
+  square = offensive_choice(board_values)
+  square = defensive_choice(board_values) unless square
+  square = choose_center_square(board_values) unless square
+  square = choose_random_square(board_values) unless square
   square
 end
 
 def computer_chooses_square(board_values)
-  winning_combinations = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [1, 4, 7],
-    [2, 5, 8],
-    [3, 6, 9],
-    [1, 5, 9],
-    [3, 5, 7]
-  ]
-
-  o_win = nil
-  x_block = nil
-
-  square = computer_choice_logic(board_values, winning_combinations, o_win, x_block)
+  square = computer_choice_logic(board_values)
 
   add_computer_choice_to_board_values(board_values, square)
 
@@ -138,8 +137,8 @@ def board_full?(board_values)
   !board_values.values.include?(" ")
 end
 
-def display_winner(_winning_combinations, board_values)
-  prompt "#{winner(winning_combinations(board_values))} wins!"
+def display_winner(board_values)
+  prompt "#{winner(board_values)} wins!"
 end
 
 def display_tie
@@ -178,12 +177,12 @@ loop do
       system "clear" if current_player_is_player == true
       display_board(board_values)
       current_player_is_player = !current_player_is_player
-      if !!winner(winning_combinations(board_values))
-        display_winner(winning_combinations(board_values), board_values)
-        if winner(winning_combinations(board_values)) == "Player"
+      if !!winner(board_values)
+        display_winner(board_values)
+        if winner(board_values) == "Player"
           player_wins += 1
           display_win_totals(player_wins, computer_wins)
-        elsif winner(winning_combinations(board_values)) == "Computer"
+        elsif winner(board_values) == "Computer"
           computer_wins += 1
           display_win_totals(player_wins, computer_wins)
         end
