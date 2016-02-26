@@ -1,15 +1,3 @@
-require 'pry'
-
-#1. Initialize deck
-#2. Deal cards to player and dealer
-#3. Player turn: hit or stay
-#- repeat until bust or "stay"
-#4. If player bust, dealer wins.
-#5. Dealer turn: hit or stay
-#- repeat until total >= 17
-#6. If dealer bust, player wins.
-#7. Compare cards and declare winner.
-
 deck = []
 player_cards = []
 dealer_cards = []
@@ -24,7 +12,7 @@ def set_empty_hands(player_cards, dealer_cards)
   dealer_cards.clear
 end
 
-def initialize_deck(the_deck)
+def initialize_deck
   suits = ["Spades", "Clubs", "Hearts", "Diamonds"]
   ranks = *(2..10).map(&:to_s) + ["J", "Q", "K", "A"]
 
@@ -40,8 +28,10 @@ def deal_card_to_dealer(dealer_cards, deck)
 end
 
 def deal_initial_hands(player_cards, dealer_cards, deck)
-  2.times { deal_card_to_player(player_cards, deck) }
-  2.times { deal_card_to_dealer(dealer_cards, deck) }
+  2.times do
+    deal_card_to_player(player_cards, deck)
+    deal_card_to_dealer(dealer_cards, deck)
+  end
 end
 
 def show_cards(cards)
@@ -68,7 +58,7 @@ def hand_value(hand)
   hand.each do |card|
     value += card_value(card)
   end
-  while (value > 21) and (aces > 0)
+  while (value > 21) && (aces > 0)
     value -= 10
     aces -= 1
   end
@@ -92,12 +82,12 @@ def card_value(card)
   rank = card[1]
   value = 0
   case
-  when *(2..10).include?(rank.to_i)
-    value = rank.to_i
   when ["J", "Q", "K"].include?(rank)
     value = 10
   when rank == "A"
     value = 11
+  when *(2..10).include?(rank.to_i)
+    value = rank.to_i
   end
   value
 end
@@ -132,7 +122,7 @@ def player_turn(player_name, player_action, player_cards, deck)
 end
 
 def dealer_turn(dealer_cards, player_cards, deck, player_name)
-  while (hand_value(dealer_cards) < 17) or (hand_value(dealer_cards) < hand_value(player_cards))
+  while (hand_value(dealer_cards) < 17) || (hand_value(dealer_cards) < hand_value(player_cards))
     display_dealer_cards_and_hand_value(dealer_cards)
     prompt "Dealer hits."
     deal_card_to_dealer(dealer_cards, deck)
@@ -141,7 +131,7 @@ def dealer_turn(dealer_cards, player_cards, deck, player_name)
   if hand_value(dealer_cards) > 21
     display_dealer_cards_and_hand_value(dealer_cards)
     prompt "Dealer busts.  #{player_name} wins!"
-  elsif (hand_value(dealer_cards) <= 21) and (hand_value(dealer_cards) >= hand_value(player_cards))
+  elsif (hand_value(dealer_cards) <= 21) && (hand_value(dealer_cards) >= hand_value(player_cards))
     display_dealer_cards_and_hand_value(dealer_cards)
     display_hand_value(player_name, player_cards)
     prompt "Dealer wins."
@@ -154,12 +144,12 @@ prompt "What is the player's name?"
 player_name = gets.chomp
 
 loop do
-  deck = initialize_deck(deck)
+  deck = initialize_deck
   deal_initial_hands(player_cards, dealer_cards, deck)
 
   display_cards(player_name, player_cards)
   display_hand_value(player_name, player_cards)
-  
+
   if twenty_one?(player_cards)
     prompt "#{player_name} wins!"
     prompt "Would you like to play again?  Type 'yes' or 'no'."
