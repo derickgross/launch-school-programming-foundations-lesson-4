@@ -141,7 +141,7 @@ def dealer_result(dealer_cards, player_cards, player_name)
   end
 end
 
-def player_turn(player_name, player_action, player_cards, deck)
+def player_turn(player_name, player_cards, deck)
   loop do
     deal_card(player_cards, deck)
 
@@ -203,7 +203,7 @@ loop do
 
   player_action = gets.chomp
 
-  player_turn(player_name, player_action, player_cards, deck) if player_action == "hit"
+  player_turn(player_name, player_cards, deck) if player_action == "hit"
 
   if bust?(player_cards)
     player_bust(player_name, player_cards)
