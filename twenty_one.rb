@@ -195,7 +195,8 @@ loop do
 
   if twenty_one?(player_cards)
     prompt "#{player_name} wins!"
-    play_again? ? next : (prompt "Thank you for playing Twenty One!"; break)
+    play_again? ? next : prompt "Thank you for playing Twenty One!"
+    break
   end
 
   prompt "You can only see one of the computer's cards: #{card_name(dealer_cards.first)}."
@@ -215,5 +216,6 @@ loop do
     dealer_turn(dealer_cards, player_cards, deck, player_name)
   end
 
-  play_again? ? next : (prompt "Thank you for playing Twenty One!"; break)
+  play_again? ? next : prompt "Thank you for playing Twenty One!"
+  break
 end
